@@ -154,7 +154,7 @@ struct fuzzy_state
 /*@only@*/ /*@null@*/ struct fuzzy_state *fuzzy_new(void)
 {
   struct fuzzy_state *self;
-  if(NULL == (self = malloc(sizeof(struct fuzzy_state))))
+  if(NULL == (self = (fuzzy_state*)malloc(sizeof(struct fuzzy_state))))
     /* malloc sets ENOMEM */
     return NULL;
   self->bhstart = 0;
@@ -176,7 +176,7 @@ struct fuzzy_state
 /*@only@*/ /*@null@*/ struct fuzzy_state *fuzzy_clone(const struct fuzzy_state *state)
 {
   struct fuzzy_state *newstate;
-  if (NULL == (newstate = malloc(sizeof(struct fuzzy_state))))
+  if (NULL == (newstate = (fuzzy_state*)malloc(sizeof(struct fuzzy_state))))
     /* malloc sets ENOMEM */
     return NULL;
   memcpy(newstate, state, sizeof(struct fuzzy_state));
@@ -564,6 +564,11 @@ int fseeko(FILE *, off_t, int);
 off_t ftello(FILE *);
 #endif
 
+int fseeko(FILE *, off_t, int);
+off_t ftello(FILE *);
+
+
+
 int fuzzy_hash_file(FILE *handle, /*@out@*/ char *result)
 {
   off_t fpos, fposend;
@@ -710,7 +715,7 @@ static int edit_distn_pa(const unsigned long long *parray, size_t s1len, const c
   unsigned long long msb;
   size_t i;
   // 0 < s1len <= 64
-  int cur = s1len;
+  int cur = (int)s1len;
   msb = 1ull << (s1len - 1);
   pv = -1;
   nv = 0;
@@ -885,8 +890,8 @@ int fuzzy_compare(const char *str1, const char *str2)
   }
 
   // move past the prefix
-  s1p = strchr(str1, ':');
-  s2p = strchr(str2, ':');
+  s1p = const_cast<char*>(strchr(str1, ':'));
+  s2p = const_cast<char*>(strchr(str2, ':'));
 
   if (!s1p || !s2p) {
     // badly formed ...

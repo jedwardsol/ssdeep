@@ -6,10 +6,10 @@
 //
 
 #include "main.h"
-
+#include "ssdeep.h"
 // Prototypes
-off_t find_file_size(FILE *f);
-off_t find_dev_size(int fd, int blk_size);
+//off_t find_file_size(FILE *f);
+//off_t find_dev_size(int fd, int blk_size);
 
 
 #ifndef _WIN32
@@ -206,6 +206,16 @@ off_t find_file_size(FILE *f)
 
 #endif // ifdef __LINUX__
 #endif // ifndef _WIN32
+
+
+int fseeko(FILE *file, off_t off, int origin)
+{
+    return fseek(file,off,origin);
+}
+off_t ftello(FILE *file)
+{
+    return ftell(file);
+}
 
 #if defined(_WIN32)
 off_t find_file_size(FILE *f) 

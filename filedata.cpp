@@ -131,7 +131,7 @@ Filedata::Filedata(const std::string& sig, const char * match_file)
 #ifndef _WIN32
   m_filename = strdup(tmp.c_str());
 #else
-  char * tmp2 = strdup(tmp.c_str());
+  char * tmp2 = _strdup(tmp.c_str());
 
   // On Win32 we have to do a kludgy cast from ordinary char
   // values to the TCHAR values we use internally. Because we may have
